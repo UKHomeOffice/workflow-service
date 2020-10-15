@@ -101,7 +101,7 @@ pipeline:
       target: WORKFLOW_SERVICE_IMAGE
     commands:
       - export SPRING_PROFILES_ACTIVE="dev"
-      - export COP_SERVICE_TAG=$${DRONE_COMMIT_SHA}
+      - export WORKFLOW_SERVICE_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
