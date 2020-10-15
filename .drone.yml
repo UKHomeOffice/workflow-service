@@ -72,6 +72,47 @@ pipeline:
       environment: dev
       event: deployment
 
+  deploy_to_dev_cop_service:
+    image: quay.io/ukhomeofficedigital/kd
+    secrets:
+    - source: DEV_KUBE_SERVER
+      target: KUBE_SERVER
+    - source: DEV_KUBE_TOKEN
+      target: KUBE_TOKEN
+    - source: DEV_KUBE_NAMESPACE_PRIVATE_COP
+      target: KUBE_NAMESPACE
+    - source: NGINX_IMAGE
+      target: NGINX_IMAGE
+    - source: NGINX_TAG
+      target: NGINX_TAG
+    - source: DEV_COP_SERVICE_AWS_ACCESS_KEY_ID
+      target: AWS_ACCESS_KEY
+    - source: AWS_REGION
+      target: AWS_REGION
+    - source: DEV_COP_SERVICE_AWS_SECRET_ACCESS_KEY
+      target: AWS_SECRET_KEY
+    - source: DEV_COP_SERVICE_AWS_SECRETS_MANAGER_ENABLED
+      target: AWS_SECRETS_MANAGER_ENABLED
+    - source: COP_SERVICE_NAME
+      target: WORKFLOW_SERVICE_NAME
+    - source: DEV_COP_SERVICE_URL
+      target: WORKFLOW_SERVICE_URL
+    - source: WORKFLOW_SERVICE_IMAGE
+      target: WORKFLOW_SERVICE_IMAGE
+    commands:
+      - export SPRING_PROFILES_ACTIVE="dev"
+      - export COP_SERVICE_TAG=$${DRONE_COMMIT_SHA}
+      - kd --insecure-skip-tls-verify -f kube/cert.yml
+      - kd --insecure-skip-tls-verify -f kube/secret.yml
+      - kd --insecure-skip-tls-verify -f kube/network-policy.yml
+      - kd --insecure-skip-tls-verify -f kube/service.yml
+      - kd --insecure-skip-tls-verify -f kube/deployment.yml --timeout=5m
+      - kd --insecure-skip-tls-verify -f kube/ingress.yml
+    when:
+      branch: master
+      environment: dev_cop_service
+      event: deployment
+
   deploy_to_production:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
