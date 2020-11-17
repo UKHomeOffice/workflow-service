@@ -95,10 +95,10 @@ aws:
     endpoint:  ${aws.elasticsearch.endpoint:}
     credentials:
       access-key: ${aws.elasticsearch.credentials.access-key:}
-      secret-key: ${aws.elasticsearch.credentials.access-key:}
+      secret-key: ${aws.elasticsearch.credentials.secret-key:}
   credentials:
     access-key: ${AWS_ACCESS_KEY:}
-    secret-Key: ${AWS_SECRET_KEY:}
+    secret-key: ${AWS_SECRET_KEY:}
 
 plugin.identity.keycloak:
   keycloakIssuerUrl: ${keycloak.auth.url}/auth/realms/${keycloak.realm}
