@@ -111,7 +111,9 @@ public class CasesApplicationService {
                 historicProcessInstances.addAll(instances);
             }
             Map<String, List<HistoricProcessInstance>> groupedByBusinessKey = historicProcessInstances
-                    .stream().collect(Collectors.groupingBy(HistoricProcessInstance::getBusinessKey));
+                    .stream()
+                    .filter(instance -> this.candidateGroupFilter(instance, platformUser))
+                    .collect(Collectors.groupingBy(HistoricProcessInstance::getBusinessKey));
 
             List<Case> cases = groupedByBusinessKey.keySet().stream().map(key -> {
                 Case caseDto = new Case();
